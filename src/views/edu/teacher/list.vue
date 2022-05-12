@@ -77,7 +77,7 @@
             type="danger"
             size="mini"
             icon="el-icon-delete"
-            @click="removeDataById(scope.row.id)"
+            @click="removeDataById(scope.row.id,page)"
             >删除</el-button
           >
         </template>
@@ -121,16 +121,44 @@
               })
           },
 
-
 		//清空
 		resetData(){
 			this.searchObj = {}
 			this.getList(1)
-		}
-
-      }
-
+		},
+		//删除讲师by Id
+		removeDataById(id,page){
+			this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+			confirmButtonText: '确定',
+			cancelButtonText: '取消',
+			type: 'warning'
+			}).then(() => {
+				return teacher.removeById(id)
+			}).then(() => {
+				this.getList(page)
+				this.$message({
+					type: 'success',
+					message: '删除成功!'
+				})
+			}).catch((response) => { // 失败
+				if (response === 'cancel') {
+					this.$message({
+						type: 'info',
+						message: '已取消删除'
+					})
+				} else {
+					this.$message({
+						type: 'error',
+						message: '删除失败'
+					})
+				}
+			})
+			
+			
+	}
   }
+
+}
 
 
 </script>
