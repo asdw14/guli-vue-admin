@@ -51,13 +51,24 @@ export default {
 		}
 	},
 	created(){
-		if (this.$route.params && this.$route.params.id) {
-			const id = this.$route.params.id
-			this.getDataById(id)
-    	}
+		this.init()
 	},
-
+	watch:{	//监听
+		$route(to,from){
+			this.init()
+		}
+	},
 	methods:{
+
+		init(){
+			if (this.$route.params && this.$route.params.id) {
+						const id = this.$route.params.id
+						this.getDataById(id)
+					}else{
+						this.teacher={}
+					}
+		},
+
 		saveOrUpdate(){
 			this.saveBtnDisabled = true
 			if (!this.teacher.id) {
