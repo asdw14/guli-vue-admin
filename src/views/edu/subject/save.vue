@@ -54,13 +54,14 @@ export default {
     },
 
     fileUploadSuccess(response) {
-    if (response.success === true) {
-    this.fileUploadBtnText = '导入成功'
-    this.loading = false
-    this.$message({
-        type: 'success',
-        message: response.message
-    })
+        if (response.success === true) {
+            this.fileUploadBtnText = '导入成功'
+            this.loading = false
+            this.$message({
+                type: 'success',
+                message: response.message
+            })
+            this.$router.push({path:'/list'})
     } 
 },
     fileUploadError(response) {

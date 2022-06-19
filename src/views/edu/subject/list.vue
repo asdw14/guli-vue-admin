@@ -4,7 +4,7 @@
 
     <el-tree
       ref="tree2"
-      :data="data2"
+      :data="subjectList"
       :props="defaultProps"
       :filter-node-method="filterNode"
       class="filter-tree"
@@ -40,17 +40,16 @@ export default {
   methods: {
       fetchNodeList(){
             subject.getNestedTreeList().then(response =>{
-                if(response.succes === true){
-                    this.fetchNodeList = response.data.items
-                }
+                
+                    this.subjectList = response.data.items
+                
             })
 
-
       },
-    filterNode(value, data) {
-      if (!value) return true
-      return data.label.indexOf(value) !== -1
-    }
+        filterNode(value, data) {
+            if (!value) return true
+            return data.title.toLowerCase().indexOf(value.toLowerCase()) !== -1
+        }
   }
 }
 </script>
