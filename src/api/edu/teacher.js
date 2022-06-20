@@ -9,6 +9,12 @@ export default{
       data: searchObj
     })
   },
+  getList(){
+    return request({
+      url:`${api_name}/findAll`,
+      method : 'get',
+    })
+  },
 
   //通过ID删除讲师
   removeById(id){
