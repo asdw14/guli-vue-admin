@@ -55,7 +55,7 @@
   </el-form-item>
 
 <!-- 课程简介-->
-<el-form-item label="课程简介">
+<el-form-item label="课程简介" >
     <tinymce :height="300" v-model="courseInfo.description"/>
 </el-form-item>
 
@@ -92,6 +92,7 @@ import Tinymce from '@/components/Tinymce'
 const defaultForm = {
   title: '',
   subjectId: '',
+  subjectParentId: '',
   teacherId: '',
   lessonNum: 0,
   description: '',
@@ -112,7 +113,7 @@ export default {
           id:123,
           title:"asdadas"
       }]//二级分类列表
-      ,
+      ,     
         BASE_API: process.env.BASE_API // 接口API地址
 
     }
@@ -132,15 +133,43 @@ export default {
 
   methods: {
     init(){
-         // 获取讲师列表
-        this.initTeacherList()
+      if (this.$route.params && this.$route.params.id) {
+          const id = this.$route.params.id
+          // 根据id获取课程基本信息
+          this.fetchCourseInfoById(id)
+        } else {
+          this.courseInfo = { ...defaultForm }
+          tinyMCE.activeEditor.setContent('')
           // 初始化分类列表
-        this.initSubjectList()
-        if(this.$route.params && this.$route.params.id){
-             const id = this.$route.params.id
-            console.log(id)
+          this.initSubjectList()
+          // 获取讲师列表
+          this.initTeacherList()
         }
     },
+
+    fetchCourseInfoById(id){
+        course.getCourseInfoById(id).then(response => {
+        this.courseInfo = response.data.item
+        subject.getNestedTreeList().then(response=>{
+            this.subjectNestedList = response.data.items
+            for(let i = 0; i<this.subjectNestedList.length; i++){
+              if(this.subjectNestedList[i].id == this.courseInfo.subjectParentId){
+                  this.subSubjectList = this.subjectNestedList[i].children
+              }  
+            }
+
+        })
+      // 获取讲师列表
+          this.initTeacherList()
+  }).catch((response) => {
+    this.$message({
+      type: 'error',
+      message: response.message
+    })
+  })
+    },
+
+
  // 获取讲师列表
     initTeacherList(){
         teacher.getList().then(response=>{
@@ -176,7 +205,7 @@ export default {
         } else {
             this.updateData()
         }
-      this.$router.push({ path: '/edu/course/chapter/1' })
+      this.$router.push({ path: '/edu/course/chapter/' + this.courseInfo.id })
     },
         // 保存
     saveData(){
@@ -197,7 +226,20 @@ export default {
     },
     
     updateData() {
-      this.$router.push({ path: '/edu/course/chapter/1' })
+      course.updateCourseInfo(this.courseInfo).then(response =>{
+            this.$message({
+                type: 'success',
+                message: '修改成功!'
+        })
+         return response// 将响应结果传递给then
+        }).then(response => {
+            this.$router.push({ path: '/edu/course/chapter/' + response.data.cid })
+        }).catch((response) => {
+            this.$message({
+                type: 'error',
+                message: response.message
+            })
+        })
     },
 
 
