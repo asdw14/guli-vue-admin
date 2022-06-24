@@ -31,4 +31,19 @@ export default {
 
     },
 
+    getCoursePublishInfoById(id) {
+        return request({
+          url: `${api_name}/coursePublishInfo/${id}`,
+          method: 'get'
+        })
+      },
+
+      //根据id发布课程
+      publishCourse(id){
+        return request({
+            url: `${api_name}/publishCourse/${id}`,
+            method: 'put'
+          })
+      }
+
 }

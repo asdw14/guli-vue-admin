@@ -139,7 +139,7 @@ export default {
           this.fetchCourseInfoById(id)
         } else {
           this.courseInfo = { ...defaultForm }
-          tinyMCE.activeEditor.setContent('')
+          // tinyMCE.activeEditor.setContent('') 
           // 初始化分类列表
           this.initSubjectList()
           // 获取讲师列表
@@ -205,7 +205,7 @@ export default {
         } else {
             this.updateData()
         }
-      this.$router.push({ path: '/edu/course/chapter/' + this.courseInfo.id })
+      // this.$router.push({ path: '/edu/course/chapter/' + this.courseInfo.id })
     },
         // 保存
     saveData(){

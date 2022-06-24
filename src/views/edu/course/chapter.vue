@@ -286,6 +286,7 @@ export default {
       this.chapter.title = ''// 重置章节标题
       this.chapter.sort = ''
       this.fetchChapterNestedListByCourseId()// 刷新列表
+      this.saveBtnDisabled = false
 
 
     },
