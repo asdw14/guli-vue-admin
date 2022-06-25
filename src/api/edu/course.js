@@ -13,6 +13,7 @@ export default {
 
     },
 
+    // 获取课程基本信息
     getCourseInfoById(id){
         return request({                    
             url : `${api_name}/courseInfo/${id}`,
@@ -31,6 +32,7 @@ export default {
 
     },
 
+    //通过id获取课程最终发布信息
     getCoursePublishInfoById(id) {
         return request({
           url: `${api_name}/coursePublishInfo/${id}`,
@@ -44,6 +46,28 @@ export default {
             url: `${api_name}/publishCourse/${id}`,
             method: 'put'
           })
-      }
+      },
 
+      //课程列表
+      list(){
+        return request({
+            url : `${api_name}/listCourse`,
+            method :'get'
+        })
+      },
+
+    //课程列表分页查询
+    getPageList(page,limit,searchObj){
+        return request({
+            url : `${api_name}/getPageList/${page}/${limit}`,
+            method :'post',
+            data : searchObj
+        })
+      },
+      removeById(id){
+        return request({
+            url : `${api_name}/removeById/${id}`,
+            method :'delete'
+        })
+      }
 }
