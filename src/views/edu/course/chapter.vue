@@ -100,7 +100,7 @@
 <script>
 import chapter from "@/api/edu/chapter"
 import video from "@/api/edu/video"
-
+import vod from '@/api/edu/vod'
 export default {
   data() {
     return {
@@ -319,7 +319,21 @@ export default {
       this.$message.warning('想要重新上传视频，请先删除已上传的视频')
     },
 
-    
+
+    //阿里云视频点播删除视频
+    beforeVodRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+
+    handleVodRemove(file, fileList) {
+      console.log(file)
+      vod.removeById(this.video.videoSourceId).then(response=>{
+        this.$message({
+          type: 'success',
+          message: response.message
+        })
+      })
+    },
     previous() {
       console.log('previous')
       this.$router.push({ path: '/edu/course/info/' + this.courseId  })
