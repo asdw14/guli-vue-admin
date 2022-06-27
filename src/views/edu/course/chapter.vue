@@ -116,12 +116,13 @@ export default {
       saveVideoBtnDisabled: false, // 课时按钮是否禁用
       dialogVideoFormVisible: false, // 是否显示课时表单
       chapterId: '', // 课时所在的章节id
-      video: {// 课时对象   
-        title: '',
-        sort: 0,
-        free: 0,
-        videoSourceId: ''
-      },
+      video: {// 课时对象
+            title: '',
+            sort: 0,
+            free: false,
+            videoSourceId: '',
+            videoOriginalName: ''
+          },
       fileList: [],//上传文件列表
       BASE_API: process.env.BASE_API // 接口API地址
     }
@@ -171,10 +172,14 @@ export default {
     },
 
     editVideo(videoId) {
-      this.dialogVideoFormVisible = true
-      video.getVideoInfoById(videoId).then(response => {
-        this.video = response.data.item
-      })
+        this.dialogVideoFormVisible = true
+            video.getVideoInfoById(videoId).then(response => {
+            this.video = response.data.item
+            if(response.data.item.videoOriginalName != '' && response.data.item.videoOriginalName != null ){
+              this.fileList = [{'name': this.video.videoOriginalName}]
+
+            }
+            })
     },
     //修改小节
     updateDataVideo() {
@@ -319,21 +324,28 @@ export default {
       this.$message.warning('想要重新上传视频，请先删除已上传的视频')
     },
 
+    handleVodUploadSuccess(response, file, fileList) {
+        this.video.videoSourceId = response.data.videoId
+        this.video.videoOriginalName = file.name;
+    },
 
     //阿里云视频点播删除视频
     beforeVodRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
 
-    handleVodRemove(file, fileList) {
-      console.log(file)
-      vod.removeById(this.video.videoSourceId).then(response=>{
+   handleVodRemove(file, fileList) {
+    console.log(file)
+    vod.removeById(this.video.videoSourceId).then(response => {
+        this.video.videoSourceId = ''
+        this.video.videoOriginalName = ''
+        this.fileList = []
         this.$message({
-          type: 'success',
-          message: response.message
+            type: 'success',
+            message: response.message
         })
-      })
-    },
+    })
+},
     previous() {
       console.log('previous')
       this.$router.push({ path: '/edu/course/info/' + this.courseId  })
