@@ -110,8 +110,8 @@ export default {
       teacherList: [],   // 讲师列表
       subjectNestedList: [],//一级分类列表
       subSubjectList: [{
-          id:123,
-          title:"asdadas"
+          id:'',
+          title:''
       }]//二级分类列表
       ,     
         BASE_API: process.env.BASE_API // 接口API地址

@@ -34,9 +34,27 @@
               <el-radio :label="false">默认</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="上传视频">
-            <!-- TODO -->
-          </el-form-item>
+        <el-form-item label="上传视频">
+            <el-upload
+                  :on-success="handleVodUploadSuccess"
+                  :on-remove="handleVodRemove"
+                  :before-remove="beforeVodRemove"
+                  :on-exceed="handleUploadExceed"
+                  :file-list="fileList"
+                  :action="BASE_API+'vodservice/upload'"
+                  :limit="1"
+                  class="upload-demo">
+            <el-button size="small" type="primary">上传视频</el-button>
+            <el-tooltip placement="right-end">
+                <div slot="content">最大支持1G，<br>
+                    支持3GP、ASF、AVI、DAT、DV、FLV、F4V、<br>
+                    GIF、M2T、M4V、MJ2、MJPEG、MKV、MOV、MP4、<br>
+                    MPE、MPG、MPEG、MTS、OGG、QT、RM、RMVB、<br>
+                    SWF、TS、VOB、WMV、WEBM 等视频格式上传</div>
+                <i class="el-icon-question"/>
+            </el-tooltip>
+            </el-upload>
+        </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogVideoFormVisible = false">取 消</el-button>
@@ -104,6 +122,8 @@ export default {
         free: 0,
         videoSourceId: ''
       },
+      fileList: [],//上传文件列表
+      BASE_API: process.env.BASE_API // 接口API地址
     }
   },
 
@@ -166,7 +186,7 @@ export default {
         this.helpSaveVideo()
       })
     },
-
+    //删除小节
     removeVideo(videoId) {
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -287,10 +307,19 @@ export default {
       this.chapter.sort = ''
       this.fetchChapterNestedListByCourseId()// 刷新列表
       this.saveBtnDisabled = false
-
-
     },
 
+
+    //阿里云视频点播成功回调
+    handleVodUploadSuccess(response, file, fileList) {
+      this.video.videoSourceId = response.data.videoId
+    },
+    //上传视频视图上传多于一个视频
+    handleUploadExceed(files, fileList) {
+      this.$message.warning('想要重新上传视频，请先删除已上传的视频')
+    },
+
+    
     previous() {
       console.log('previous')
       this.$router.push({ path: '/edu/course/info/' + this.courseId  })
