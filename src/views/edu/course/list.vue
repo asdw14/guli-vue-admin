@@ -124,7 +124,7 @@
   :total="total"
   style="padding: 30px 0; text-align: center;"
   layout="total, prev, pager, next, jumper"
-  @current-change="fetchData"
+  @current-change="getPageList"
 />
   </div>
 </template>
@@ -165,10 +165,13 @@ import subject from '@/api/edu/subject'
             })
         },
         // 条件查询带分页
-        getPageList(){
+        getPageList(page=1){
+          this.page = page
+          this.listLoading = true
             course.getPageList(this.page, this.limit, this.searchObj).then(response=>{
                 this.list = response.data.items
                 this.total = response.data.total
+                this.listLoading = false
             })
         },
  // 获取讲师列表

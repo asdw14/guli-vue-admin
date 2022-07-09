@@ -133,6 +133,28 @@ export const constantRouterMap = [
           }
         ]
       },
+      // banner管理
+      {
+        path: '/edu/banner',
+        component: Layout,
+        redirect: '/edu/banner/list',
+        name: 'Banner',
+        meta: { title: 'Banner管理', icon: 'example' },
+        children: [
+          {
+            path: 'list',
+            name: 'BannerList',
+            component: () => import('@/views/edu/banner/list'),
+            meta: { title: 'Banner管理列表', icon: 'table' }
+          },
+          {
+            path: 'info/:id',
+            name: 'BannerUpdate',
+            component: () => import('@/views/edu/banner/info'),
+            meta: { title: 'Banner添加', icon: 'tree' }
+          },
+        ]
+      },
 
   {
     path: '/form',
